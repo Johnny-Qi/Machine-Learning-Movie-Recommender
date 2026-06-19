@@ -1,0 +1,32 @@
+#K-Nearest Neighbor Train
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.model_selection import cross_val_score
+import matplotlib.pyplot as plt
+import numpy as np
+
+k = list(range(1,16)) #list of potential K's number of neighbords
+weights = ["uniform" , "distance"] #how much should each neighbor weigh in on the result?
+results = {} #list for results
+
+for w in weights:
+  score = []
+  for i in k: # for each iteration, make the a KNeighborClassifier for the current number of neighbors and current weight
+    knn = KNeighborsClassifier(n_neighbors = i, weights = w)
+    scores = cross_val_score(knn, X_train, y_train, cv = 5) #splits train data to 5 sections and trains and tests 5 times
+    score.append(scores.mean()) # takes the mean of the 5 tests and applies to results, cross validation
+
+  results[w] = score
+  plt.plot(k, score, marker='o', label=f"weights={w}") #plot results
+
+plt.title("KNN: Accuracy")
+plt.xlabel("Number of Neighbors (K)")
+plt.ylabel("Accuracy")
+plt.legend()
+plt.show()
+
+bestw = max(results, key=lambda w: max(results[w])) #determine best weight and number neighbors
+bestk = k[np.argmax(results[best_w])]
+
+print("Best KNN parameters:")
+print("k =", bestk)
+print("weights =", bestw) #uniform is the way to go, each neighbor has the same say
