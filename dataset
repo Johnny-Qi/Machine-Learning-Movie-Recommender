@@ -1,0 +1,3 @@
+import kagglehub
+# Download dataset from kaggle
+path = kagglehub.dataset_download("abdallahwagih/movies")
