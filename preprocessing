@@ -1,0 +1,33 @@
+#Pre-processing, multi label encoding, data cleaning, feature engineering
+from sklearn.preprocessing import MultiLabelBinarizer
+multi = MultiLabelBinarizer()
+
+df["genres"] = df["genres"].fillna("Unknown") #handles null values and replaces them with "Unknown"
+df["genres_list"] = df["genres"].apply(lambda x: x.split()) #splits genres to individual words
+
+#Multilabel encoding
+multigenre = multi.fit_transform(df["genres_list"]) #Makes the matrix of all genres and counts for each movie
+genre_df = pd.DataFrame(multigenre, columns=multi.classes_) #makes a table
+
+df = pd.concat([df, genre_df], axis=1) #attatches back to original dataset
+
+df["release_date"] = pd.to_datetime(df["release_date"], errors="coerce") #changes format to datetime
+
+df["year"] = df["release_date"].dt.year #new feature represent year
+df["year"] = df["year"].fillna(df["year"].median()) #makes the year the median of all release years
+
+df["vote_average"] = df["vote_average"].fillna(df["vote_average"].mean()) #makes null values the mean of all ratings
+df["vote_count"] = pd.to_numeric(df["vote_count"], errors="coerce") #converts every data point to numeric (precaution)
+df["vote_count"] = df["vote_count"].fillna(df["vote_count"].median()) #replaces null values with the median number
+df["vote_count_scaled"] = df["vote_count"] / 10000 #scales all numbers down by dividing by 1000
+
+df["revenue"] = pd.to_numeric(df["revenue"], errors="coerce") #converts every data point to numeric (precaution)
+df["revenue"] = df["revenue"].fillna(df["revenue"].median())#replaces null values with the median number
+df["revenue_scaled"] = df["revenue"] / 10000 #scales all numbers down by dividing by 10,000
+
+df["budget"] = pd.to_numeric(df["budget"], errors="coerce")  #converts every data point to numeric (precaution)
+df["budget"] = df["budget"].fillna(df["budget"].median())#replaces null values with the median number
+df["budget_scaled"] = df["budget"] / 10000 #scales all numbers down by dividing by 10,000
+
+df["profit"] = df["revenue"] - df["budget"] #new feature finds profit by subtracting budget from revenue
+df["profit_scaled"] = df["profit"] / 10000
