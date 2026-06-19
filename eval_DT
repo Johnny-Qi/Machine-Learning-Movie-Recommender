@@ -1,0 +1,26 @@
+#Final evaluation for decision tree
+from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
+from sklearn.tree import DecisionTreeClassifier
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+final_tree = DecisionTreeClassifier( #creates final tree
+    max_depth = bestdepth,
+    min_samples_split = bestsplit,
+    random_state = 42
+)
+tree.fit(X_train, y_train) #stores relationships between x and y from training
+y_pred_tree = tree.predict(X_test) #stores the predictions of the testing set in y_pred_tree
+
+print("Decision Tree Accuracy:", accuracy_score(y_test, y_pred_tree)) #finds accuracy score
+print("Decision Tree Classification Report:\n")
+print(classification_report(y_test, y_pred_tree)) #makes classification report
+
+cm_tree = confusion_matrix(y_test, y_pred_tree) #makes classification confusion matrix
+
+plt.figure(figsize=(5,4))
+sns.heatmap(cm_tree, annot=True, fmt='d', cmap='Greens')
+plt.title("Decision Tree Confusion Matrix")
+plt.xlabel("Predicted")
+plt.ylabel("Actual")
+plt.show()
