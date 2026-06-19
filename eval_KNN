@@ -1,0 +1,25 @@
+#Final evaluation for K Nearest Neighbor
+from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
+from sklearn.neighbors import KNeighborsClassifier
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+final_knn = KNeighborsClassifier( #creates knn with the best hyperparameters from training
+    n_neighbors=bestk,
+    weights=bestw
+)
+
+knn.fit(X_train, y_train) #stores relationships between x and y from training
+y_pred_knn = knn.predict(X_test) #stores the predictions of the testing set in y_pred_knn
+
+print("KNN Accuracy:", accuracy_score(y_test, y_pred_knn)) #finds accuracy score
+print("KNN Classification Report:\n")
+print(classification_report(y_test, y_pred_knn)) #makes classification report
+cm_knn = confusion_matrix(y_test, y_pred_knn) #makes confusion matrix
+
+plt.figure(figsize=(5,4))
+sns.heatmap(cm_knn, annot=True, fmt='d', cmap='Greens')
+plt.title("KNN Confusion Matrix")
+plt.xlabel("Predicted")
+plt.ylabel("Actual")
+plt.show()
