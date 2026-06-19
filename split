@@ -1,0 +1,23 @@
+#splitting training and testing sets
+from sklearn.model_selection import train_test_split
+import matplotlib.pyplot as plt
+
+ #model only learns from these 5 features, the x
+feature_cols = list(multi.classes_) + ["year", "revenue_scaled","vote_count_scaled", "budget_scaled", "profit_scaled"]
+X = df[feature_cols]
+
+y = (df["vote_average"] >= 6.51).astype(int) # what the overall criteria is, the y
+
+class_counts = y.value_counts().sort_index()
+plt.figure(figsize=(6,4))
+plt.bar(class_counts.index, class_counts.values)
+plt.title("Class Distribution (Good vs 'Bad' Movies)") #I put bad in quotes cause 'bad' is subjective and sounds too harsh lol
+plt.xlabel("Classes")
+plt.ylabel("Number of Movies")
+plt.xticks([0, 1], ["'Bad'", "Good"])
+plt.show()
+
+
+X_train, X_test, y_train, y_test = train_test_split( #split 80/20 train/test
+    X, y, test_size=0.2, random_state=42
+)
