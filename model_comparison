@@ -1,0 +1,16 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+
+
+knn_score = accuracy_score(y_test, y_pred_knn) #collects knn accuracy score
+tree_score = accuracy_score(y_test, y_pred_tree) #collects tree accuracy score
+
+print("KNN Accuracy:", knn_score)
+print("Decision Tree Accuracy:", tree_score)
+
+plt.figure(figsize=(8,6))
+plt.bar(["KNN", "Decision Tree"], [knn_score, tree_score]) #makes a bar graph showing the two accuracy scores for two models
+plt.title("Model Accuracy Comparison")
+plt.xlabel("Model")
+plt.ylabel("Accuracy")
+plt.show()
