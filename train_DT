@@ -1,0 +1,32 @@
+#Decision Tree Classifier Train
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.model_selection import cross_val_score
+import matplotlib.pyplot as plt
+import numpy as np
+
+depth = list(range(1,16)) #range of potential depths
+splits = [2,6,10,12,15] #shortened it to a couple of splits cause it took too long to run
+results = {}
+
+for s in splits:
+  score = []
+  for d in depth: #for every iteration of depth and splits make a tree and evaluate
+    tree = DecisionTreeClassifier(max_depth = d, min_samples_split=s, random_state=42) # min sample split
+    scores = cross_val_score(tree, X_train, y_train, cv = 5) #splits train data to 5 sections and trains and tests 5 times
+    score.append(scores.mean())# takes the mean of the 5 tests and applies to results, cross validation
+
+  results[s] = score
+  plt.plot(depth, score, marker='o', label=f"min_samples_split={s}") #plot results
+
+plt.title("Decision Tree: Accuracy")
+plt.xlabel("Max Depth")
+plt.ylabel("Accuracy")
+plt.legend()
+plt.show()
+
+bestsplit = max(results, key=lambda s: max(results[s])) #determine best split and depth
+bestdepth = depth[np.argmax(results[bestsplit])]
+
+print("Best Decision Tree:")
+print("max_depth =", bestdepth)
+print("min_samples_split =", bestsplit)
